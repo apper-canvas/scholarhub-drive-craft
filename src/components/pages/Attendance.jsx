@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
-import { format, addDays, subDays, startOfWeek } from "date-fns";
-import Header from "@/components/organisms/Header";
-import AttendanceGrid from "@/components/molecules/AttendanceGrid";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Button from "@/components/atoms/Button";
-import ApperIcon from "@/components/ApperIcon";
+import { addDays, format, startOfWeek, subDays } from "date-fns";
+import PrintModal from "@/components/organisms/PrintModal";
 import { attendanceService } from "@/services/api/attendanceService";
 import { studentService } from "@/services/api/studentService";
-
+import ApperIcon from "@/components/ApperIcon";
+import Header from "@/components/organisms/Header";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import AttendanceGrid from "@/components/molecules/AttendanceGrid";
+import Button from "@/components/atoms/Button";
 const Attendance = () => {
   const { onMenuClick } = useOutletContext();
   const [attendance, setAttendance] = useState([]);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
+const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   useEffect(() => {
     loadAttendanceData();
   }, []);
@@ -42,8 +42,12 @@ const Attendance = () => {
     }
   };
 
-  const handleMarkAttendance = () => {
+const handleMarkAttendance = () => {
     toast.info("Mark attendance functionality would open a modal here");
+  };
+
+  const handlePrintReports = () => {
+    setIsPrintModalOpen(true);
   };
 
   const handlePreviousWeek = () => {
@@ -85,11 +89,13 @@ const Attendance = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
+<Header 
         title="Attendance" 
         showSearch={false}
         onAddClick={handleMarkAttendance}
         addButtonText="Mark Attendance"
+        onPrintClick={handlePrintReports}
+        showPrintButton={true}
         onMenuClick={onMenuClick}
       />
       
@@ -187,7 +193,12 @@ const Attendance = () => {
             </div>
           </div>
         </div>
-      </div>
+</div>
+      
+      <PrintModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+      />
     </div>
   );
 };

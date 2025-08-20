@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
 import Header from "@/components/organisms/Header";
+import PrintModal from "@/components/organisms/PrintModal";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
@@ -23,8 +24,8 @@ const Grades = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-  const [selectedAssignment, setSelectedAssignment] = useState("");
-
+const [selectedAssignment, setSelectedAssignment] = useState("");
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   useEffect(() => {
     loadInitialData();
   }, []);
@@ -86,8 +87,12 @@ const Grades = () => {
     return Math.round(total / filteredGrades.length);
   };
 
-  const handleAddGrade = () => {
+const handleAddGrade = () => {
     toast.info("Add Grade functionality would open a modal here");
+  };
+
+  const handlePrintReports = () => {
+    setIsPrintModalOpen(true);
   };
 
   if (loading) return <Loading type="table" />;
@@ -95,11 +100,13 @@ const Grades = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
+<Header 
         title="Grades" 
         showSearch={false}
         onAddClick={handleAddGrade}
         addButtonText="Add Grade"
+        onPrintClick={handlePrintReports}
+        showPrintButton={true}
         onMenuClick={onMenuClick}
       />
       
@@ -254,7 +261,12 @@ const Grades = () => {
             </div>
           </div>
         )}
-      </div>
+</div>
+
+      <PrintModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+      />
     </div>
   );
 };

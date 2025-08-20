@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Header from "@/components/organisms/Header";
 import StudentTable from "@/components/organisms/StudentTable";
 import StudentModal from "@/components/organisms/StudentModal";
+import PrintModal from "@/components/organisms/PrintModal";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
@@ -17,9 +18,9 @@ const Students = () => {
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+const [selectedStudent, setSelectedStudent] = useState(null);
   const [modalMode, setModalMode] = useState("create");
-
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   useEffect(() => {
     loadStudents();
   }, []);
@@ -69,10 +70,13 @@ const Students = () => {
     setIsModalOpen(true);
   };
 
-  const handleViewStudent = (student) => {
+const handleViewStudent = (student) => {
     toast.info(`Viewing ${student.firstName} ${student.lastName}'s profile`);
   };
 
+  const handlePrintReports = () => {
+    setIsPrintModalOpen(true);
+  };
   const handleDeleteStudent = async (studentId) => {
     if (window.confirm("Are you sure you want to delete this student?")) {
       try {
@@ -108,12 +112,14 @@ const Students = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
+<Header 
         title="Students" 
         searchValue={searchQuery}
         onSearchChange={setSearchQuery}
         onAddClick={handleAddStudent}
         addButtonText="Add Student"
+        onPrintClick={handlePrintReports}
+        showPrintButton={true}
         onMenuClick={onMenuClick}
       />
       
@@ -144,12 +150,17 @@ const Students = () => {
         )}
       </div>
 
-      <StudentModal
+<StudentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         student={selectedStudent}
         onSave={handleSaveStudent}
         mode={modalMode}
+      />
+
+      <PrintModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
       />
     </div>
   );

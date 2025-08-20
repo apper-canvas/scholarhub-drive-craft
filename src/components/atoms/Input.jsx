@@ -3,9 +3,9 @@ import { cn } from "@/utils/cn";
 
 const Input = React.forwardRef(({ 
   className, 
-  type = "text", 
   label,
   error,
+  type = "text",
   ...props 
 }, ref) => {
   return (
